@@ -1,38 +1,31 @@
-// Header component with Settings icon
 import React, { useState, useRef, useEffect } from 'react';
 import { Menu, X, Phone, Settings, ChevronLeft, ChevronRight, Trophy, GraduationCap, Building2, Heart, Newspaper } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import WeButton from '@/components/ui/WeButton';
 import Container from '@/components/layout/Container';
-import { supabase } from '@/integrations/supabase/client';
-
-interface Event {
-  id: string;
-  name: string;
-  icon: string;
-  color: string;
-  href: string;
-}
-
-interface Logo {
-  id: string;
-  name: string;
-  file_path: string;
-  logo_type: string;
-  background_type: string;
-  is_primary: boolean;
-}
+import { useLogos } from '@/hooks/use-logos';
+import { useSeo } from '@/hooks/use-seo';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const [events, setEvents] = useState<Event[]>([]);
-  const [primaryLogo, setPrimaryLogo] = useState<Logo | null>(null);
   const location = useLocation();
   const isNavigatingRef = useRef(false);
+  const { data: logos, isLoading: logosLoading } = useLogos();
+  const { data: seoData, isLoading: seoLoading } = useSeo();
+
+  const lightLogo = logos?.find(logo => logo.background_type === 'light');
+
+  const events = seoData?.map(item => ({
+    id: item.id,
+    name: item.landing_page,
+    href: `/events/${item.url_slug}`,
+    icon: item.event_emoji,
+    color: 'text-gray-600' // Default color, can be customized if needed
+  })) || [];
 
   // Check if we're on sportclubs page for orange branding
   const isOrangePage = location.pathname === '/sportclubs';
@@ -49,84 +42,6 @@ const Header = () => {
   const segmentsScrollRef = useRef<HTMLDivElement>(null);
   const [canScrollSegmentsLeft, setCanScrollSegmentsLeft] = useState(false);
   const [canScrollSegmentsRight, setCanScrollSegmentsRight] = useState(true);
-
-  // Fetch events from Supabase seo table
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('seo')
-          .select('id, landing_page, event_emoji, url_slug')
-          .order('id', { ascending: true });
-
-        if (error) {
-          console.error('Error fetching events:', error);
-          return;
-        }
-
-        if (data) {
-          const formattedEvents: Event[] = data.map((item, index) => ({
-            id: item.id?.toString() || index.toString(),
-            name: item.landing_page || 'Event',
-            icon: item.event_emoji || '🎮',
-            color: getEventColor(index),
-            href: `/events/${item.url_slug || 'event'}`
-          }));
-
-          setEvents(formattedEvents);
-        }
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-    };
-
-    fetchEvents();
-  }, []);
-
-  // Fetch primary logo from database
-  useEffect(() => {
-    const fetchLogo = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('logos')
-          .select('*')
-          .eq('is_primary', true)
-          .single();
-
-        if (error) {
-          console.error('Error fetching logo:', error);
-          return;
-        }
-
-        if (data) {
-          // Use the correct bucket and construct proper URL
-          const { data: urlData } = supabase.storage
-            .from('Website Images')
-            .getPublicUrl(data.file_path);
-          
-          setPrimaryLogo({
-            ...data,
-            file_path: urlData.publicUrl
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching logo:', error);
-      }
-    };
-
-    fetchLogo();
-  }, []);
-
-  // Generate color classes for events
-  const getEventColor = (index: number): string => {
-    const colors = [
-      'text-purple-600', 'text-red-600', 'text-yellow-500', 'text-red-400',
-      'text-yellow-400', 'text-cyan-500', 'text-blue-600', 'text-purple-500',
-      'text-red-500', 'text-orange-500', 'text-green-500', 'text-blue-500',
-      'text-pink-500', 'text-orange-600', 'text-green-600'
-    ];
-    return colors[index % colors.length];
-  };
 
   // Scroll functions for events
   const checkScrollButtons = () => {
@@ -249,16 +164,14 @@ const Header = () => {
         <div className="flex justify-between items-center py-3">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            {primaryLogo ? (
+            {logosLoading ? (
+              <div className="h-12 w-32 bg-gray-200 animate-pulse rounded-md"></div>
+            ) : (
               <img 
-                src={primaryLogo.file_path} 
-                alt={primaryLogo.name}
+                src={lightLogo?.url}
+                alt="WePlay Logo"
                 className="h-12 w-auto"
               />
-            ) : (
-              <div className="w-12 h-12 bg-weplay-primary rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-xl">W</span>
-              </div>
             )}
           </Link>
 
@@ -375,7 +288,13 @@ const Header = () => {
                 onScroll={checkScrollButtons}
                 className="flex space-x-3 overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-10"
               >
-                {events.map((event) => {
+                {seoLoading ? (
+                  <div className="flex space-x-3">
+                    {[...Array(8)].map((_, i) => (
+                      <div key={i} className="h-9 w-32 bg-gray-200 animate-pulse rounded-lg"></div>
+                    ))}
+                  </div>
+                ) : ( events.map((event) => {
                   const isActive = location.pathname === event.href;
                   return (
                     <Link
@@ -405,7 +324,7 @@ const Header = () => {
                       </div>
                     </Link>
                   );
-                })}
+                }))}
               </div>
             </div>
 
@@ -501,7 +420,13 @@ const Header = () => {
                   onScroll={checkScrollButtons}
                   className="flex space-x-3 overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
                 >
-                  {events.map((event) => {
+                  {seoLoading ? (
+                    <div className="flex space-x-3">
+                      {[...Array(8)].map((_, i) => (
+                        <div key={i} className="h-16 w-20 bg-gray-200 animate-pulse rounded-lg"></div>
+                      ))}
+                    </div>
+                  ) : (events.map((event) => {
                     const isActive = location.pathname === event.href;
                     return (
                       <Link
@@ -531,7 +456,7 @@ const Header = () => {
                         </div>
                       </Link>
                     );
-                  })}
+                  }))}
                 </div>
               </div>
               

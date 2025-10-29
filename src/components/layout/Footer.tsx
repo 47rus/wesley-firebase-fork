@@ -1,93 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Phone, Mail, MapPin, Clock, Building2, Hash, CreditCard, Banknote } from 'lucide-react';
+import React from 'react';
+import { Phone, Mail, Clock, Building2, Hash, CreditCard, Banknote } from 'lucide-react';
 import Container from '@/components/layout/Container';
 import WeBadge from '@/components/ui/WeBadge';
-import { supabase } from '@/integrations/supabase/client';
-
-interface FooterEvent {
-  id: string;
-  name: string;
-  href: string;
-}
-
-interface Logo {
-  id: string;
-  name: string;
-  file_path: string;
-  logo_type: string;
-  background_type: string;
-  is_primary: boolean;
-}
+import { useLogos } from '@/hooks/use-logos';
 
 const Footer = () => {
-  const [events, setEvents] = useState<FooterEvent[]>([]);
-  const [primaryLogo, setPrimaryLogo] = useState<Logo | null>(null);
+  const { data: logos, isLoading: logosLoading } = useLogos();
 
-  // Fetch events from Supabase seo table
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('seo')
-          .select('id, landing_page, url_slug')
-          .order('id', { ascending: true });
+  const darkLogo = logos?.find(logo => logo.background_type === 'dark');
 
-        if (error) {
-          console.error('Error fetching events:', error);
-          return;
-        }
-
-        if (data) {
-          const formattedEvents: FooterEvent[] = data.map((item) => ({
-            id: item.id?.toString() || '',
-            name: item.landing_page || 'Event',
-            href: `/events/${item.url_slug || 'event'}`
-          }));
-
-          setEvents(formattedEvents);
-        }
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-    };
-
-    fetchEvents();
-  }, []);
-
-  // Fetch primary logo from database
-  useEffect(() => {
-    const fetchLogo = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('logos')
-          .select('*')
-          .eq('logo_type', 'icon')
-          .eq('background_type', 'transparent')
-          .single();
-
-        if (error) {
-          console.error('Error fetching logo:', error);
-          return;
-        }
-
-        if (data) {
-          // Use the correct bucket and construct proper URL
-          const { data: urlData } = supabase.storage
-            .from('Website Images')
-            .getPublicUrl(data.file_path);
-          
-          setPrimaryLogo({
-            ...data,
-            file_path: urlData.publicUrl
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching logo:', error);
-      }
-    };
-
-    fetchLogo();
-  }, []);
+  const events = [
+    { id: '1', name: 'FIFA Toernooi', href: '/events/fifa-toernooi' },
+    { id: '2', name: 'PS5 Huren', href: '/events/ps5-huren' },
+    { id: '3', name: 'F1 Race Simulatoren', href: '/events/f1-race-simulatoren' },
+    { id: '4', name: 'LED Voetbal', href: '/events/led-voetbal' },
+    { id: '5', name: 'Bubbel Voetbal', href: '/events/bubbel-voetbal' },
+    { id: '6', name: 'VR Experience', href: '/events/vr-experience' },
+    { id: '7', name: 'Retro Arcade Hal', href: '/events/retro-arcade-hal' },
+    { id: '8', name: 'Graffiti Workshop', href: '/events/graffiti-workshop' },
+    { id: '9', name: 'Silent Disco', href: '/events/silent-disco' },
+  ];
 
   return (
     <footer className="bg-gray-900 text-white">
@@ -97,21 +29,15 @@ const Footer = () => {
             {/* Company Info */}
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                {primaryLogo ? (
-                  <img 
-                    src={primaryLogo.file_path} 
-                    alt={primaryLogo.name}
-                    className="h-10 w-10"
-                  />
+                {logosLoading ? (
+                  <div className="h-10 w-32 bg-gray-700 animate-pulse rounded-md"></div>
                 ) : (
-                  <div className="w-10 h-10 bg-weplay-primary rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">W</span>
-                  </div>
+                  <img 
+                    src={darkLogo?.url}
+                    alt="WePlay Icon White"
+                    className="h-10 w-auto"
+                  />
                 )}
-                <div>
-                  <h3 className="text-xl font-heading font-bold">WePlay</h3>
-                  <p className="text-xs text-gray-400">UNITED</p>
-                </div>
               </div>
               <p className="text-gray-300 text-sm">
                 Specialist in game-events op locatie voor sportclubs, scholen, bedrijven en non-profits. We organiseren unieke gaming ervaringen zoals FIFA toernooien, F1 simulators, VR experiences en bubbelvoetbal. Van teambuilding tot seizoensafsluitingen - wij ontzorgen volledig en zorgen voor onvergetelijke momenten die je team samenbrengen.
@@ -166,7 +92,7 @@ const Footer = () => {
             <div className="space-y-4">
               <h4 className="text-lg font-heading font-semibold">Events</h4>
               <div className="space-y-2 text-sm">
-                {events.slice(0, 9).map((event) => (
+                {events.map((event) => (
                   <a key={event.id} href={event.href} className="block text-gray-300 hover:text-weplay-primary transition-colors">{event.name}</a>
                 ))}
                 <a href="/events" className="block text-weplay-primary hover:text-white transition-colors font-medium">Alle Events →</a>
