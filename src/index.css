@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Original shadcn colors */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* WePlay brand colors */
+    --weplay-primary: 321 100% 45%;      /* #E900C7 Hot Pink */
+    --weplay-dark: 252 99% 57%;          /* #461FFB Indigo Violet */
+    --weplay-light: 240 1% 94%;          /* #F0F0F1 Lavender */
+    --weplay-card: 0 0% 100%;            /* #FFFFFF Azure */
+    --weplay-text: 315 11% 13%;          /* #231F20 Aubergine */
+    --weplay-text-medium: 207 4% 43%;    /* #6D6F72 Raven */
+    --weplay-accent: 244 92% 75%;        /* #8E83FA Light Slate Blue */
+    --weplay-accent-light: 281 24% 87%;  /* #E1D9E8 Snuff */
+
+    /* KNVB brand colors - Updated 2024 */
+    --knvb-primary-orange: 24 95% 51%;   /* #F97316 Fris, warm oranje */
+    --knvb-orange-dark: 20 91% 48%;      /* #EA580C Hover states */
+    --knvb-bg-light: 0 0% 100%;          /* #FFFFFF Hoofdachtergrond */
+    --knvb-bg-alt: 0 0% 98%;             /* #FAFAFA Alternatief sectieachtergrond */
+    --knvb-card-light: 0 0% 100%;        /* #FFFFFF Witte kaarten */
+    --knvb-text-dark: 215 25% 11%;       /* #111827 Zeer donkergrijs koppen */
+    --knvb-text-body: 215 20% 24%;       /* #374151 Donkergrijs bodytekst */
+    --knvb-text-medium: 215 14% 42%;     /* #6B7280 Medium grijs subtiele tekst */
+    --knvb-border-light: 215 20% 91%;    /* #E5E7EB Lichte grijs borders */
+    
+    /* Special dark section for packages/configurator */
+    --knvb-dark-bg: 215 25% 11%;         /* #111827 Gray-900 */
+    --knvb-dark-bg-deep: 217 33% 3%;     /* #030712 Gray-950 */
+    --knvb-dark-card: 215 25% 16%;       /* #1F2937 Gray-800 */
+    --knvb-dark-text: 0 0% 100%;         /* #FFFFFF White text */
+    --knvb-dark-text-muted: 215 14% 83%; /* #D1D5DB Subtle gray */
+    --knvb-dark-border: 215 20% 24%;     /* #374151 Gray-700 */
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+/* Sportclub page specific orange branding */
+.sportclub-page {
+  --weplay-primary: 24 95% 51%;        /* #F97316 Orange for KNVB branding */
+  --weplay-dark: 20 91% 48%;           /* #EA580C Orange Dark for hover states */
+  --weplay-accent: 24 95% 67%;         /* #FF9B54 Light Orange accent */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
