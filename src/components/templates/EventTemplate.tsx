@@ -121,10 +121,10 @@ const EventTemplate: React.FC<EventTemplateProps> = (props) => {
     formData.forEach((value, key) => {
       data[key] = value;
     });
-    data.event = props.hero_title;
+    data.event = props.url_slug;
 
     try {
-      const res = await fetch('https://hook.eu1.make.com/coln5r5l71ccqr5mn3pm1meapbt7wc1e', {
+      const res = await fetch('https://hook.eu1.make.com/iwdsbm75pnvw7rnmwmbdu4uj72w5522j', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
