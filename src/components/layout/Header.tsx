@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useRef, useEffect } from 'react';
 import { Menu, X, Phone, Settings, ChevronLeft, ChevronRight, Trophy, GraduationCap, Building2, Heart, Newspaper } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import WeButton from '@/components/ui/WeButton';
 import Container from '@/components/layout/Container';
@@ -13,7 +14,7 @@ const Header = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const location = useLocation();
+  const pathname = usePathname();
   const isNavigatingRef = useRef(false);
   const { data: logos, isLoading: logosLoading } = useLogos();
   const { data: seoData, isLoading: seoLoading } = useSeo();
@@ -29,7 +30,7 @@ const Header = () => {
   })) || [];
 
   // Check if we're on sportclubs page for orange branding
-  const isOrangePage = location.pathname === '/sportclubs';
+  const isOrangePage = pathname === '/sportclubs';
 
   // Segments for the slider (target audience groups)
   const segments = [
@@ -103,7 +104,7 @@ const Header = () => {
 
   const scrollToActiveEvent = () => {
     if (scrollRef.current && !isNavigatingRef.current) {
-      const activeEvent = events.find(event => event.href === location.pathname);
+      const activeEvent = events.find(event => event.href === pathname);
       if (activeEvent) {
         const activeElement = scrollRef.current.querySelector(`[href="${activeEvent.href}"]`) as HTMLElement;
         if (activeElement) {
@@ -145,7 +146,7 @@ const Header = () => {
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [location.pathname]);
+  }, [pathname]);
 
   React.useEffect(() => {
     checkScrollButtons();
@@ -164,7 +165,7 @@ const Header = () => {
         {/* Main Navigation Row */}
         <div className="flex justify-between items-center py-3">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
+          <Link href="/" className="flex items-center">
             {logosLoading ? (
               <div className="h-12 w-32 bg-gray-200 animate-pulse rounded-md"></div>
             ) : (
@@ -192,11 +193,11 @@ const Header = () => {
             <div className="flex items-center space-x-4 flex-1">
               {segments.map((segment) => {
                 const IconComponent = segment.icon;
-                const isActive = location.pathname === segment.href;
+                const isActive = pathname === segment.href;
                 return (
                   <Link
                     key={segment.name}
-                    to={segment.href}
+                    href={segment.href}
                     className={`flex items-center space-x-2 transition-colors text-sm font-medium px-3 py-2 rounded-lg ${
                       isActive 
                         ? (isOrangePage ? 'bg-orange-500 text-white' : 'bg-weplay-primary text-white')
@@ -218,7 +219,7 @@ const Header = () => {
               className="border-gray-300 text-gray-700 hover:text-gray-900"
               asChild
             >
-              <Link to="/nieuws" className="flex items-center space-x-2">
+              <Link href="/nieuws" className="flex items-center space-x-2">
                 <Newspaper className="w-4 h-4" />
                 <span>Nieuws</span>
               </Link>
@@ -228,7 +229,7 @@ const Header = () => {
               className="border-gray-300 text-gray-700 hover:text-gray-900"
               asChild
             >
-              <Link to="/contact">Contact</Link>
+              <Link href="/contact">Contact</Link>
             </Button>
             <div className="flex items-center space-x-2 text-gray-600">
               <Phone className="w-4 h-4" />
@@ -296,11 +297,11 @@ const Header = () => {
                     ))}
                   </div>
                 ) : ( events.map((event) => {
-                  const isActive = location.pathname === event.href;
+                  const isActive = pathname === event.href;
                   return (
                     <Link
                       key={event.id}
-                      to={event.href}
+                      href={event.href}
                       className="flex-shrink-0 group cursor-pointer"
                       onClick={handleEventClick}
                     >
@@ -353,11 +354,11 @@ const Header = () => {
               {/* Segments Links */}
               {segments.map((segment) => {
                 const IconComponent = segment.icon;
-                const isActive = location.pathname === segment.href;
+                const isActive = pathname === segment.href;
                 return (
                   <Link
                     key={segment.name}
-                    to={segment.href}
+                    href={segment.href}
                     className={`flex items-center space-x-2 transition-colors text-sm font-medium py-2 px-3 rounded-lg ${
                       isActive 
                         ? (isOrangePage ? 'bg-orange-500 text-white' : 'bg-weplay-primary text-white')
@@ -373,9 +374,9 @@ const Header = () => {
               
               {/* Nieuws Link */}
               <Link
-                to="/nieuws"
+                href="/nieuws"
                 className={`flex items-center space-x-2 transition-colors text-sm font-medium py-2 px-3 rounded-lg ${
-                  location.pathname === '/nieuws'
+                  pathname === '/nieuws'
                     ? (isOrangePage ? 'bg-orange-500 text-white' : 'bg-weplay-primary text-white')
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
@@ -428,11 +429,11 @@ const Header = () => {
                       ))}
                     </div>
                   ) : (events.map((event) => {
-                    const isActive = location.pathname === event.href;
+                    const isActive = pathname === event.href;
                     return (
                       <Link
                         key={event.id}
-                        to={event.href}
+                        href={event.href}
                         className="flex-shrink-0 group cursor-pointer"
                         onClick={() => {
                           handleEventClick();
@@ -463,7 +464,7 @@ const Header = () => {
               
               <div className="flex flex-col space-y-3 pt-4 border-t border-gray-200">
                 <Button variant="outline" className="w-full" asChild>
-                  <Link to="/contact">Contact</Link>
+                  <Link href="/contact">Contact</Link>
                 </Button>
                 <div className="flex items-center justify-center space-x-2 text-gray-600 py-2">
                   <Phone className="w-4 h-4" />
