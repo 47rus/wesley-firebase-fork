@@ -1,18 +1,41 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import EventTemplate from '@/components/templates/EventTemplate';
-import { useSeo } from '@/hooks/use-seo';
 import NotFound from '@/pages/NotFound';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Package } from '@/components/templates/EventPackages';
+import { Tables } from '@/integrations/supabase/types';
+
+type EventSeoData = Tables<"seo">;
 
 // Dynamic Event Page that fetches SEO + Packages from Supabase
 const DynamicEventPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { data: seoData, isLoading: seoLoading, error: seoError } = useSeo();
 
-  const eventSeo = seoData?.find(item => item.url_slug === slug);
+  // Fetch SEO data for the specific slug
+  const { data: eventSeo, isLoading: seoLoading, error: seoError } = useQuery<EventSeoData | null, Error>({
+    queryKey: ['seo', slug],
+    queryFn: async () => {
+      if (!slug) return null;
+
+      const { data, error } = await supabase
+        .from('seo')
+        .select('*')
+        .eq('url_slug', slug)
+        .single();
+
+      if (error) {
+        // Log the error to the console for debugging
+        console.error('Error fetching SEO data:', error);
+        // Don't throw an error, but return null to be handled by the component
+        return null;
+      }
+
+      return data;
+    },
+    enabled: !!slug, // Only run query if slug is available
+  });
 
   const { data: packages, isLoading: packagesLoading, error: packagesError } = useQuery<Package[], Error>({
     queryKey: ['packages', eventSeo?.landing_page],
