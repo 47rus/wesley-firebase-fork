@@ -112,9 +112,12 @@ interface EventTemplateProps {
 
 const EventTemplate: React.FC<EventTemplateProps> = (props) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     const form = e.currentTarget;
     const formData = new FormData(form);
     const data: Record<string, any> = {};
@@ -124,7 +127,7 @@ const EventTemplate: React.FC<EventTemplateProps> = (props) => {
     data.event = props.hero_title;
 
     try {
-      const res = await fetch('https://hook.eu1.make.com/coln5r5l71ccqr5mn3pm1meapbt7wc1e', {
+      const res = await fetch('https://hook.eu1.make.com/iwdsbm75pnvw7rnmwmbdu4uj72w5522j', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -132,11 +135,17 @@ const EventTemplate: React.FC<EventTemplateProps> = (props) => {
       if (res.ok) {
         setFormSubmitted(true);
         form.reset();
+      } else {
+        throw new Error('Form submission failed');
       }
     } catch (error) {
-      // Optional: handle error silently for now
+      console.error('Submission Error:', error);
+      alert('Er is iets misgegaan bij het versturen van het formulier. Probeer het opnieuw.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
 
   // Target segments data with consistent styling
   const targetSegments = [
@@ -507,9 +516,11 @@ const EventTemplate: React.FC<EventTemplateProps> = (props) => {
                           variant="secondary" 
                           size="lg" 
                           className="min-w-[200px]"
+                          disabled={isSubmitting}
                         >
-                          VERSTUUR AANVRAAG
+                          {isSubmitting ? 'VERSTUREN...' : 'VERSTUUR AANVRAAG'}
                         </WeButton>
+
                         <WeButton 
                           type="button" 
                           variant="outline" 
