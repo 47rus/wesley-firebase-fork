@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 18, "column": 0}, "map": {"version":3,"sources":["file:///home/user/wesley-firebase-fork/clean-project/src/app/page.tsx"],"sourcesContent":["export default function Page() {\n    return <h1>Hello, World!</h1>;\n}\n"],"names":[],"mappings":";;;;;;AAAe,SAAS;IACpB,qBAAO,kQAAC;kBAAG;;;;;;AACf","debugId":null}}]
+}

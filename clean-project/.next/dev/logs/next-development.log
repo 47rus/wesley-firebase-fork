@@ -1,0 +1,15 @@
+[00:00:12.247] Server  LOG      ✓ Ready in 8.4s
+[00:00:21.654] Server  LOG      ○ Compiling / ...
+[00:00:44.763] Server  WARN     ⚠ Cross origin request detected from 9000-firebase-wesley-firebase-fork-1762021134090.cluster-jbb3mjctu5cbgsi6hwq6u4btwe.cloudworkstations.dev to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[00:05:55.932] Server  ERROR   Error: ENOENT: no such file or directory, scandir '/home/user/wesley-firebase-fork/clean-project/src/app'
+[00:05:55.961] Server  ERROR    ⨯ "unhandledRejection:" Error: ENOENT: no such file or directory, scandir '/home/user/wesley-firebase-fork/clean-project/src/app'
+[00:05:55.986] Server  ERROR    ⨯ "unhandledRejection: " Error: ENOENT: no such file or directory, scandir '/home/user/wesley-firebase-fork/clean-project/src/app'
+[00:05:56.074] Server  ERROR   Error: ENOENT: no such file or directory, scandir '/home/user/wesley-firebase-fork/clean-project/src/app'
+[00:05:56.092] Server  ERROR   Error: ENOENT: no such file or directory, scandir '/home/user/wesley-firebase-fork/clean-project/src/app'
+[00:05:56.261] Server  ERROR   Error: ENOENT: no such file or directory, scandir '/home/user/wesley-firebase-fork/clean-project/src/app'
+[00:05:56.274] Server  ERROR   Error: ENOENT: no such file or directory, scandir '/home/user/wesley-firebase-fork/clean-project/src/app'
+[00:05:56.394] Server  ERROR   Error: ENOENT: no such file or directory, scandir '/home/user/wesley-firebase-fork/clean-project/src/app'
+[00:05:56.418] Server  ERROR   Error: ENOENT: no such file or directory, scandir '/home/user/wesley-firebase-fork/clean-project/src/app'
+[00:05:56.607] Server  ERROR   Error: ENOENT: no such file or directory, scandir '/home/user/wesley-firebase-fork/clean-project/src/app'
+[00:05:56.621] Server  ERROR   Error: ENOENT: no such file or directory, scandir '/home/user/wesley-firebase-fork/clean-project/src/app'
