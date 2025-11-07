@@ -1,4 +1,4 @@
-// File: /home/user/wesley-firebase-fork/src/app/nieuws/page.tsx
+// File: C:\Users\yadro\Desktop\DevProjects\wesley-firebase-fork\src\app\nieuws\page.tsx
 import * as entry from '../../../../src/app/nieuws/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

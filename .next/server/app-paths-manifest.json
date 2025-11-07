@@ -3,10 +3,10 @@
   "/contact/page": "app/contact/page.js",
   "/page": "app/page.js",
   "/bedrijven/page": "app/bedrijven/page.js",
-  "/non-profits/page": "app/non-profits/page.js",
-  "/scholen/page": "app/scholen/page.js",
-  "/sportclubs/page": "app/sportclubs/page.js",
   "/nieuws/[slug]/page": "app/nieuws/[slug]/page.js",
-  "/nieuws/page": "app/nieuws/page.js",
-  "/event/[slug]/page": "app/event/[slug]/page.js"
+  "/non-profits/page": "app/non-profits/page.js",
+  "/sportclubs/page": "app/sportclubs/page.js",
+  "/scholen/page": "app/scholen/page.js",
+  "/event/[slug]/page": "app/event/[slug]/page.js",
+  "/nieuws/page": "app/nieuws/page.js"
 }
