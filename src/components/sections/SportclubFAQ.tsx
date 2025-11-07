@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import { ChevronDown, HelpCircle, Phone, Mail, Calendar, Users, Clock, Euro } from 'lucide-react';
 import Container from '@/components/layout/Container';
@@ -92,8 +93,12 @@ const SportclubFAQ = () => {
   };
 
   return (
-    <section className="py-24 bg-black text-white">
-      <Container>
+    <section className="relative py-24 bg-black text-white">
+        <div className="absolute inset-0">
+            <img src="/placeholder.svg" alt="Football field at night" className="w-full h-full object-cover"/>
+            <div className="absolute inset-0 bg-black opacity-80"></div>
+        </div>
+      <Container className="relative">
         {/* Section Header */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
@@ -165,6 +170,42 @@ const SportclubFAQ = () => {
           ))}
         </div>
 
+        {/* Contact Team Section */}
+        <div className="text-center my-20">
+            <h3 className="text-2xl font-heading font-bold text-white mb-12">
+              Ons Team Staat Voor Je Klaar
+            </h3>
+            <div className="flex justify-center gap-8">
+                <div className="text-center">
+                    <img src="/placeholder.svg" alt="Team Member 1" className="w-24 h-24 rounded-full mx-auto mb-4 bg-gray-700"/>
+                    <h4 className="font-semibold text-white">Teamlid 1</h4>
+                    <p className="text-sm text-gray-400">Expert</p>
+                </div>
+                <div className="text-center">
+                    <img src="/placeholder.svg" alt="Team Member 2" className="w-24 h-24 rounded-full mx-auto mb-4 bg-gray-700"/>
+                    <h4 className="font-semibold text-white">Teamlid 2</h4>
+                    <p className="text-sm text-gray-400">Expert</p>
+                </div>
+                <div className="text-center">
+                    <img src="/placeholder.svg" alt="Team Member 3" className="w-24 h-24 rounded-full mx-auto mb-4 bg-gray-700"/>
+                    <h4 className="font-semibold text-white">Teamlid 3</h4>
+                    <p className="text-sm text-gray-400">Expert</p>
+                </div>
+            </div>
+        </div>
+
+        {/* Certification Badges Section */}
+        <div className="text-center my-20">
+            <h3 className="text-2xl font-heading font-bold text-white mb-8">
+              Gecertificeerd en Verzekerd
+            </h3>
+            <div className="flex justify-center items-center gap-8">
+              <img src="/placeholder.svg" alt="KNVB Official Supplier" className="h-16"/>
+              <img src="/placeholder.svg" alt="Insurance Certification" className="h-16"/>
+              <img src="/placeholder.svg" alt="Safety Compliance" className="h-16"/>
+            </div>
+        </div>
+
         {/* Contact CTA */}
         <div className="mt-16 text-center bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl p-12">
           <h3 className="text-2xl font-heading font-bold text-white mb-4">
@@ -212,35 +253,6 @@ const SportclubFAQ = () => {
             </div>
           </div>
         </div>
-
-        {/* Photo Placement Suggestions - Hidden comments for future implementation */}
-        {/* 
-        PHOTO PLACEMENT SUGGESTIONS:
-        
-        1. FAQ Background: Subtle pattern or very dark image of football field at night
-           - Size: Full section background with heavy dark overlay
-           - Content: Night shot of empty football field with stadium lights
-           
-        2. Category Icons: Custom illustrated icons for each FAQ category
-           - General: Question mark with football
-           - Practical: Calendar with football events
-           - Financial: Euro symbol with KNVB colors
-           - Support: Team of support staff
-           - Size: 24x24px vector icons in orange theme
-           
-        3. Contact Team: Professional photos of customer service team
-           - Headshots of actual WePlay team members
-           - Dressed in company polo shirts
-           - Friendly, approachable expressions
-           - Size: 150x150px circular crops
-           
-        4. Certification Badges: Official seals and certifications
-           - KNVB Official Supplier badge
-           - Insurance certification
-           - Safety compliance badges
-           - Quality assurance seals
-           - Size: 80x80px official badges
-        */}
       </Container>
     </section>
   );

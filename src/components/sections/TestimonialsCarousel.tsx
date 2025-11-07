@@ -1,4 +1,4 @@
-
+"use client";
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Star, CheckCircle } from 'lucide-react';
 import { WeCard, WeCardContent } from '@/components/ui/WeCard';

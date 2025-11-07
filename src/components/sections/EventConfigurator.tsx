@@ -1,4 +1,4 @@
-
+"use client";
 import React, { useState } from 'react';
 import { Settings, Users, MapPin, Calculator, ArrowRight, CheckCircle } from 'lucide-react';
 import { WeCard, WeCardContent } from '@/components/ui/WeCard';
@@ -236,7 +236,7 @@ const EventConfigurator = () => {
                           {selectedEvents.map(event => <li key={event}>{event}</li>)}
                         </ul>
                       </div>
-                    )}
+                    )}\
                   </div>
                   
                   <div className="border-t border-gray-200 mt-6 pt-6">

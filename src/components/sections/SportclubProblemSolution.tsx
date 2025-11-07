@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import Container from '@/components/layout/Container';
 import Typography from '@/components/ui/Typography';
@@ -5,10 +6,6 @@ import { Button } from '@/components/ui/button';
 
 const SportclubProblemSolution = () => {
   const [showSolution, setShowSolution] = useState(false);
-
-  const handleToggle = () => {
-    setShowSolution(!showSolution);
-  };
 
   return (
     <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
@@ -82,14 +79,7 @@ const SportclubProblemSolution = () => {
               </div>
               <div className="order-1 md:order-2">
                 <div className="relative rounded-2xl overflow-hidden shadow-lg">
-                  <div className="bg-gradient-to-br from-orange-400 to-orange-600 aspect-video flex items-center justify-center">
-                    <div className="text-center text-white">
-                      <svg className="w-16 h-16 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                      </svg>
-                      <p className="text-lg font-semibold">Oplossing Beeld</p>
-                    </div>
-                  </div>
+                   <img src="/placeholder.svg" alt="Oplossing voor sportclubs" className="w-full h-full object-cover aspect-video"/>
                 </div>
               </div>
             </div>
@@ -99,14 +89,7 @@ const SportclubProblemSolution = () => {
               <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div>
                   <div className="relative rounded-2xl overflow-hidden shadow-lg">
-                    <div className="bg-gradient-to-br from-red-400 to-red-600 aspect-video flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <svg className="w-16 h-16 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                        </svg>
-                        <p className="text-lg font-semibold">Probleem Beeld</p>
-                      </div>
-                    </div>
+                     <img src="/placeholder.svg" alt="Uitdagingen voor sportclubs" className="w-full h-full object-cover aspect-video"/>
                   </div>
                 </div>
                 <div className="flex flex-col justify-center h-full">

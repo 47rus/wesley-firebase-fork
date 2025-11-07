@@ -1,4 +1,3 @@
-
 import { UserCheck, Gamepad2, MapPin } from 'lucide-react';
 
 export const brandPromises = [

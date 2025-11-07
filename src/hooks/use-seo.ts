@@ -1,16 +1,9 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { Tables } from '@/integrations/supabase/types';
 
-// Define the shape of the SEO data
-interface SeoData {
-  id: string;
-  url_slug: string;
-  landing_page: string;
-  event_emoji: string;
-  seo_title: string;
-  seo_description: string;
-}
+type SeoData = Tables<'seo'>;
 
 // Custom hook to fetch SEO data
 export const useSeo = () => {
@@ -25,7 +18,7 @@ export const useSeo = () => {
         throw new Error(error.message);
       }
 
-      return data;
+      return data as SeoData[];
     },
     // Cache the data for 1 hour
     staleTime: 1000 * 60 * 60,

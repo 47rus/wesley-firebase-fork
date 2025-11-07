@@ -1,24 +1,26 @@
+'use client';
 import React from 'react';
+import Link from 'next/link';
 import { Phone, Mail, Clock, Building2, Hash, CreditCard, Banknote } from 'lucide-react';
 import Container from '@/components/layout/Container';
 import WeBadge from '@/components/ui/WeBadge';
-import { useLogos } from '@/hooks/use-logos';
+import { useLogos, AppLogo } from '@/hooks/use-logos';
 
 const Footer = () => {
-  const { data: logos, isLoading: logosLoading } = useLogos();
+  const { data: logos, isLoading, isError } = useLogos();
 
-  const darkLogo = logos?.find(logo => logo.background_type === 'dark');
+  const darkLogo = logos?.find((logo: AppLogo) => logo.background_type === 'dark' && logo.is_primary);
 
   const events = [
-    { id: '1', name: 'FIFA Toernooi', href: '/events/fifa-toernooi' },
-    { id: '2', name: 'PS5 Huren', href: '/events/ps5-huren' },
-    { id: '3', name: 'F1 Race Simulatoren', href: '/events/f1-race-simulatoren' },
-    { id: '4', name: 'LED Voetbal', href: '/events/led-voetbal' },
-    { id: '5', name: 'Bubbel Voetbal', href: '/events/bubbel-voetbal' },
-    { id: '6', name: 'VR Experience', href: '/events/vr-experience' },
-    { id: '7', name: 'Retro Arcade Hal', href: '/events/retro-arcade-hal' },
-    { id: '8', name: 'Graffiti Workshop', href: '/events/graffiti-workshop' },
-    { id: '9', name: 'Silent Disco', href: '/events/silent-disco' },
+    { id: '1', name: 'FIFA Toernooi', href: '/event/fifa-toernooi' },
+    { id: '2', name: 'PS5 Huren', href: '/event/ps5-huren' },
+    { id: '3', name: 'F1 Race Simulatoren', href: '/event/f1-race-simulatoren' },
+    { id: '4', name: 'LED Voetbal', href: '/event/led-voetbal' },
+    { id: '5', name: 'Bubbel Voetbal', href: '/event/bubbel-voetbal' },
+    { id: '6', name: 'VR Experience', href: '/event/vr-experience' },
+    { id: '7', name: 'Retro Arcade Hal', href: '/event/retro-arcade-hal' },
+    { id: '8', name: 'Graffiti Workshop', href: '/event/graffiti-workshop' },
+    { id: '9', name: 'Silent Disco', href: '/event/silent-disco' },
   ];
 
   return (
@@ -26,18 +28,13 @@ const Footer = () => {
       <Container>
         <div className="py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Company Info */}
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                {logosLoading ? (
-                  <div className="h-10 w-32 bg-gray-700 animate-pulse rounded-md"></div>
-                ) : (
-                  <img 
-                    src={darkLogo?.url}
-                    alt="WePlay Icon White"
-                    className="h-10 w-auto"
-                  />
-                )}
+                <img 
+                  src={darkLogo?.url || '/placeholder.svg'}
+                  alt="WePlay Icon White"
+                  className="h-10 w-auto"
+                />
               </div>
               <p className="text-gray-300 text-sm">
                 Specialist in game-events op locatie voor sportclubs, scholen, bedrijven en non-profits. We organiseren unieke gaming ervaringen zoals FIFA toernooien, F1 simulators, VR experiences en bubbelvoetbal. Van teambuilding tot seizoensafsluitingen - wij ontzorgen volledig en zorgen voor onvergetelijke momenten die je team samenbrengen.
@@ -45,7 +42,6 @@ const Footer = () => {
               <WeBadge variant="knvb" size="sm">Official Supplier KNVB</WeBadge>
             </div>
 
-            {/* Contact Info */}
             <div className="space-y-4">
               <h4 className="text-lg font-heading font-semibold">Contact</h4>
               <div className="space-y-3 text-sm">
@@ -88,40 +84,37 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Events */}
             <div className="space-y-4">
               <h4 className="text-lg font-heading font-semibold">Events</h4>
               <div className="space-y-2 text-sm">
                 {events.map((event) => (
-                  <a key={event.id} href={event.href} className="block text-gray-300 hover:text-weplay-primary transition-colors">{event.name}</a>
+                  <Link key={event.id} href={event.href} className="block text-gray-300 hover:text-weplay-primary transition-colors">{event.name}</Link>
                 ))}
-                <a href="/events" className="block text-weplay-primary hover:text-white transition-colors font-medium">Alle Events →</a>
+                <Link href="/events" className="block text-weplay-primary hover:text-white transition-colors font-medium">Alle Events →</Link>
               </div>
             </div>
 
-            {/* Services */}
             <div className="space-y-4">
               <h4 className="text-lg font-heading font-semibold">Doelgroepen</h4>
               <div className="space-y-2 text-sm">
-                <a href="/sportclubs" className="block text-gray-300 hover:text-weplay-primary transition-colors">Sportclubs</a>
-                <a href="/scholen" className="block text-gray-300 hover:text-weplay-primary transition-colors">Scholen</a>
-                <a href="/bedrijven" className="block text-gray-300 hover:text-weplay-primary transition-colors">Bedrijven</a>
-                <a href="/non-profits" className="block text-gray-300 hover:text-weplay-primary transition-colors">Non-profits</a>
-                <a href="/contact" className="block text-weplay-primary hover:text-white transition-colors font-medium pt-2">Contact →</a>
+                <Link href="/sportclubs" className="block text-gray-300 hover:text-weplay-primary transition-colors">Sportclubs</Link>
+                <Link href="/scholen" className="block text-gray-300 hover:text-weplay-primary transition-colors">Scholen</Link>
+                <Link href="/bedrijven" className="block text-gray-300 hover:text-weplay-primary transition-colors">Bedrijven</Link>
+                <Link href="/non-profits" className="block text-gray-300 hover:text-weplay-primary transition-colors">Non-profits</Link>
+                <Link href="/contact" className="block text-weplay-primary hover:text-white transition-colors font-medium pt-2">Contact →</Link>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="border-t border-gray-800 py-6">
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
             <div className="text-sm text-gray-400">
               Copyright © 2017 – 2025 WePlay United B.V. (doorstart uit WePlay Esports B.V. per 01-08-2025)
             </div>
             <div className="flex items-center space-x-6 text-sm">
-              <a href="/privacy" className="text-gray-400 hover:text-weplay-primary transition-colors">Privacy</a>
-              <a href="/algemene-voorwaarden" className="text-gray-400 hover:text-weplay-primary transition-colors">Algemene Voorwaarden</a>
+              <Link href="/privacy" className="text-gray-400 hover:text-weplay-primary transition-colors">Privacy</Link>
+              <Link href="/algemene-voorwaarden" className="text-gray-400 hover:text-weplay-primary transition-colors">Algemene Voorwaarden</Link>
             </div>
           </div>
         </div>

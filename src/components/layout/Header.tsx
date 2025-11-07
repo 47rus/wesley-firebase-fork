@@ -1,36 +1,57 @@
+'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Menu, X, Phone, Settings, ChevronLeft, ChevronRight, Trophy, GraduationCap, Building2, Heart, Newspaper } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import WeButton from '@/components/ui/WeButton';
 import Container from '@/components/layout/Container';
-import { useLogos } from '@/hooks/use-logos';
-import { useSeo } from '@/hooks/use-seo';
+import { useLogos, AppLogo } from '@/hooks/use-logos';
+import { supabase } from '@/integrations/supabase/client';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const location = useLocation();
+  const pathname = usePathname();
   const isNavigatingRef = useRef(false);
-  const { data: logos, isLoading: logosLoading } = useLogos();
-  const { data: seoData, isLoading: seoLoading } = useSeo();
 
-  const lightLogo = logos?.find(logo => logo.background_type === 'light');
+  const { data: logos, isLoading, isError } = useLogos();
+  const lightLogo = logos?.find((logo: AppLogo) => logo.background_type === 'light' && logo.is_primary);
+  
+  const [events, setEvents] = useState<any[]>([]);
 
-  const events = seoData?.map(item => ({
-    id: item.id,
-    name: item.landing_page,
-    href: `/events/${item.url_slug}`,
-    icon: item.event_emoji,
-    color: 'text-gray-600' // Default color, can be customized if needed
-  })) || [];
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const { data, error } = await supabase
+        .from('seo')
+        .select('id, url_slug, landing_page, event_emoji')
+        .order('sort_order', { ascending: true });
 
-  // Check if we're on sportclubs page for orange branding
-  const isOrangePage = location.pathname === '/sportclubs';
+      if (error) {
+        console.error('Error fetching events for header:', error);
+        return;
+      }
 
-  // Segments for the slider (target audience groups)
+      if (data) {
+        const formattedEvents = data.map(item => ({
+          id: item.id,
+          name: item.landing_page,
+          href: `/event/${item.url_slug}`,
+          icon: item.event_emoji,
+          color: 'text-gray-600'
+        }));
+        setEvents(formattedEvents);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  const isOrangePage = pathname === '/sportclubs';
+
   const segments = [
     { name: 'Sportclubs', href: '/sportclubs', icon: Trophy },
     { name: 'Scholen', href: '/scholen', icon: GraduationCap },
@@ -38,12 +59,10 @@ const Header = () => {
     { name: 'Bedrijven', href: '/bedrijven', icon: Building2 },
   ];
 
-  // Add refs and state for segments slider
   const segmentsScrollRef = useRef<HTMLDivElement>(null);
   const [canScrollSegmentsLeft, setCanScrollSegmentsLeft] = useState(false);
   const [canScrollSegmentsRight, setCanScrollSegmentsRight] = useState(true);
 
-  // Scroll functions for events
   const checkScrollButtons = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
@@ -66,7 +85,6 @@ const Header = () => {
     }
   };
 
-  // Scroll functions for segments
   const checkSegmentsScrollButtons = () => {
     if (segmentsScrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = segmentsScrollRef.current;
@@ -89,7 +107,6 @@ const Header = () => {
     }
   };
 
-  // Check if an element is visible in the scroll container
   const isElementVisible = (element: HTMLElement, container: HTMLElement) => {
     const elementRect = element.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
@@ -102,18 +119,16 @@ const Header = () => {
 
   const scrollToActiveEvent = () => {
     if (scrollRef.current && !isNavigatingRef.current) {
-      const activeEvent = events.find(event => event.href === location.pathname);
+      const activeEvent = events.find(event => event.href === pathname);
       if (activeEvent) {
         const activeElement = scrollRef.current.querySelector(`[href="${activeEvent.href}"]`) as HTMLElement;
         if (activeElement) {
-          // Only scroll if the element is not already visible
           if (!isElementVisible(activeElement, scrollRef.current)) {
             const container = scrollRef.current;
             const containerWidth = container.clientWidth;
             const elementLeft = activeElement.offsetLeft;
             const elementWidth = activeElement.offsetWidth;
             
-            // Calculate scroll position to center the element, accounting for padding
             const scrollPosition = elementLeft - (containerWidth / 2) + (elementWidth / 2);
             
             container.scrollTo({
@@ -121,7 +136,6 @@ const Header = () => {
               behavior: 'smooth'
             });
             
-            // Update scroll buttons after scrolling
             setTimeout(checkScrollButtons, 300);
           }
         }
@@ -130,21 +144,19 @@ const Header = () => {
   };
 
   const handleEventClick = () => {
-    // Set flag to prevent auto-scroll after menu clicks
     isNavigatingRef.current = true;
     setTimeout(() => {
       isNavigatingRef.current = false;
     }, 500);
   };
 
-  // Auto-scroll to active event when route changes (only for direct navigation)
   useEffect(() => {
     const timer = setTimeout(() => {
       scrollToActiveEvent();
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [location.pathname]);
+  }, [pathname, events]);
 
   React.useEffect(() => {
     checkScrollButtons();
@@ -160,24 +172,16 @@ const Header = () => {
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <Container>
-        {/* Main Navigation Row */}
         <div className="flex justify-between items-center py-3">
-          {/* Logo */}
-          <Link to="/" className="flex items-center">
-            {logosLoading ? (
-              <div className="h-12 w-32 bg-gray-200 animate-pulse rounded-md"></div>
-            ) : (
-              <img 
-                src={lightLogo?.url}
-                alt="WePlay Logo"
-                className="h-12 w-auto"
-              />
-            )}
+          <Link href="/" className="flex items-center">
+            <img 
+              src={lightLogo?.url || '/placeholder.svg'}
+              alt="WePlay Logo"
+              className="h-12 w-auto"
+            />
           </Link>
 
-          {/* Center Navigation - Segments */}
           <div className="hidden lg:flex items-center flex-1 max-w-2xl mx-8">
-            {/* Primary CTA Button */}
             <WeButton 
               variant="primary"
               size="sm"
@@ -187,15 +191,14 @@ const Header = () => {
               Stel event samen
             </WeButton>
             
-            {/* Segments - Simple flex layout */}
             <div className="flex items-center space-x-4 flex-1">
               {segments.map((segment) => {
                 const IconComponent = segment.icon;
-                const isActive = location.pathname === segment.href;
+                const isActive = pathname === segment.href;
                 return (
                   <Link
                     key={segment.name}
-                    to={segment.href}
+                    href={segment.href}
                     className={`flex items-center space-x-2 transition-colors text-sm font-medium px-3 py-2 rounded-lg ${
                       isActive 
                         ? (isOrangePage ? 'bg-orange-500 text-white' : 'bg-weplay-primary text-white')
@@ -210,14 +213,13 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Right Side - Nieuws, Contact & Phone */}
           <div className="hidden lg:flex items-center space-x-4">
             <Button 
               variant="outline" 
               className="border-gray-300 text-gray-700 hover:text-gray-900"
               asChild
             >
-              <Link to="/nieuws" className="flex items-center space-x-2">
+              <Link href="/nieuws" className="flex items-center space-x-2">
                 <Newspaper className="w-4 h-4" />
                 <span>Nieuws</span>
               </Link>
@@ -227,7 +229,7 @@ const Header = () => {
               className="border-gray-300 text-gray-700 hover:text-gray-900"
               asChild
             >
-              <Link to="/contact">Contact</Link>
+              <Link href="/contact">Contact</Link>
             </Button>
             <div className="flex items-center space-x-2 text-gray-600">
               <Phone className="w-4 h-4" />
@@ -235,7 +237,6 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
           <button
             className="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -244,19 +245,15 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Events Section - Full width with max boundary at phone number */}
         <div className="hidden lg:block py-3 border-t border-gray-100 overflow-hidden">
           <div className="flex items-center">
-            {/* Left side - ALLE EVENTS label */}
             <div className="flex-shrink-0 w-32">
               <span className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
                 ALLE EVENTS
               </span>
             </div>
 
-            {/* Center - Events container that extends to phone number position */}
             <div className="flex-1 relative mr-4 overflow-hidden" style={{ maxWidth: 'calc(100% - 16rem)' }}>
-              {/* Left navigation button */}
               <button
                 onClick={scrollLeft}
                 disabled={!canScrollLeft}
@@ -269,7 +266,6 @@ const Header = () => {
                 <ChevronLeft className="w-3 h-3" />
               </button>
 
-              {/* Right navigation button */}
               <button
                 onClick={scrollRight}
                 disabled={!canScrollRight}
@@ -282,24 +278,17 @@ const Header = () => {
                 <ChevronRight className="w-3 h-3" />
               </button>
 
-              {/* Events scroll container with maximum width usage */}
               <div
                 ref={scrollRef}
                 onScroll={checkScrollButtons}
                 className="flex space-x-3 overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-10"
               >
-                {seoLoading ? (
-                  <div className="flex space-x-3">
-                    {[...Array(8)].map((_, i) => (
-                      <div key={i} className="h-9 w-32 bg-gray-200 animate-pulse rounded-lg"></div>
-                    ))}
-                  </div>
-                ) : ( events.map((event) => {
-                  const isActive = location.pathname === event.href;
+                {events.map((event) => {
+                  const isActive = pathname === event.href;
                   return (
                     <Link
                       key={event.id}
-                      to={event.href}
+                      href={event.href}
                       className="flex-shrink-0 group cursor-pointer"
                       onClick={handleEventClick}
                     >
@@ -308,14 +297,12 @@ const Header = () => {
                             ? (isOrangePage ? 'bg-orange-500 text-white shadow-lg' : 'bg-weplay-primary text-white shadow-lg')
                             : 'bg-white border border-gray-200 hover:border-gray-300'
                         }`}>
-                        {/* Event Icon */}
                         <div className={`w-5 h-5 rounded-full flex items-center justify-center text-sm flex-shrink-0 ${
                           isActive ? 'bg-white/20' : 'bg-gray-50'
                         }`}>
                           <span className={isActive ? 'text-white' : event.color}>{event.icon}</span>
                         </div>
                         
-                        {/* Event Name */}
                         <span className={`text-sm font-medium leading-tight whitespace-nowrap ${
                           isActive ? 'text-white' : 'text-gray-700'
                         }`}>
@@ -324,18 +311,15 @@ const Header = () => {
                       </div>
                     </Link>
                   );
-                }))}
+                })}
               </div>
             </div>
 
-            {/* Right side - Space to align with phone number end */}
             <div className="flex-shrink-0" style={{ width: '4.5rem' }}>
-              {/* This space ensures alignment with the end of the phone number above */}
             </div>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="lg:hidden py-4 border-t border-gray-200">
             <nav className="flex flex-col space-y-4">
@@ -349,14 +333,13 @@ const Header = () => {
                 Stel event samen
               </WeButton>
               
-              {/* Segments Links */}
               {segments.map((segment) => {
                 const IconComponent = segment.icon;
-                const isActive = location.pathname === segment.href;
+                const isActive = pathname === segment.href;
                 return (
                   <Link
                     key={segment.name}
-                    to={segment.href}
+                    href={segment.href}
                     className={`flex items-center space-x-2 transition-colors text-sm font-medium py-2 px-3 rounded-lg ${
                       isActive 
                         ? (isOrangePage ? 'bg-orange-500 text-white' : 'bg-weplay-primary text-white')
@@ -370,11 +353,10 @@ const Header = () => {
                 );
               })}
               
-              {/* Nieuws Link */}
               <Link
-                to="/nieuws"
+                href="/nieuws"
                 className={`flex items-center space-x-2 transition-colors text-sm font-medium py-2 px-3 rounded-lg ${
-                  location.pathname === '/nieuws'
+                  pathname === '/nieuws'
                     ? (isOrangePage ? 'bg-orange-500 text-white' : 'bg-weplay-primary text-white')
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
@@ -384,7 +366,6 @@ const Header = () => {
                 <span>Nieuws</span>
               </Link>
               
-              {/* Mobile Events with arrows */}
               <div className="pt-4 border-t border-gray-200">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
@@ -420,18 +401,12 @@ const Header = () => {
                   onScroll={checkScrollButtons}
                   className="flex space-x-3 overflow-x-auto scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
                 >
-                  {seoLoading ? (
-                    <div className="flex space-x-3">
-                      {[...Array(8)].map((_, i) => (
-                        <div key={i} className="h-16 w-20 bg-gray-200 animate-pulse rounded-lg"></div>
-                      ))}
-                    </div>
-                  ) : (events.map((event) => {
-                    const isActive = location.pathname === event.href;
+                  {events.map((event) => {
+                    const isActive = pathname === event.href;
                     return (
                       <Link
                         key={event.id}
-                        to={event.href}
+                        href={event.href}
                         className="flex-shrink-0 group cursor-pointer"
                         onClick={() => {
                           handleEventClick();
@@ -456,13 +431,13 @@ const Header = () => {
                         </div>
                       </Link>
                     );
-                  }))}
+                  })}
                 </div>
               </div>
               
               <div className="flex flex-col space-y-3 pt-4 border-t border-gray-200">
                 <Button variant="outline" className="w-full" asChild>
-                  <Link to="/contact">Contact</Link>
+                  <Link href="/contact">Contact</Link>
                 </Button>
                 <div className="flex items-center justify-center space-x-2 text-gray-600 py-2">
                   <Phone className="w-4 h-4" />

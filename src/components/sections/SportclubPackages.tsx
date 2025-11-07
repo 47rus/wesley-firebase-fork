@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import { CheckCircle, Users, MapPin, Award, Phone } from 'lucide-react';
 import Container from '@/components/layout/Container';

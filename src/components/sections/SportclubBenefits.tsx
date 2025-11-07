@@ -92,8 +92,12 @@ const SportclubBenefits = () => {
   ];
 
   return (
-    <section className="py-24 bg-gray-900 text-white">
-      <Container>
+    <section className="relative py-24 bg-gray-900 text-white">
+      <div className="absolute inset-0">
+        <img src="/placeholder.svg" alt="Sportclub event background" className="w-full h-full object-cover"/>
+        <div className="absolute inset-0 bg-gray-900 opacity-70"></div>
+      </div>
+      <Container className="relative">
         {/* Section Header */}
         <div className="text-center mb-20">
           <div className="inline-flex items-center bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
@@ -137,6 +141,35 @@ const SportclubBenefits = () => {
           ))}
         </div>
 
+        {/* Process Flow Section */}
+        <div className="text-center my-20">
+            <h3 className="text-2xl font-heading font-bold text-white mb-12">
+              Hoe het werkt
+            </h3>
+            <div className="grid md:grid-cols-4 gap-8">
+              <div className="flex flex-col items-center">
+                <img src="/placeholder.svg" alt="Consultation" className="w-full h-48 object-cover rounded-lg mb-4"/>
+                <h4 className="font-semibold text-white">1. Consultatie</h4>
+                <p className="text-gray-400 text-sm">Telefonische kennismaking</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <img src="/placeholder.svg" alt="Planning" className="w-full h-48 object-cover rounded-lg mb-4"/>
+                <h4 className="font-semibold text-white">2. Planning</h4>
+                <p className="text-gray-400 text-sm">Evenement op maat</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <img src="/placeholder.svg" alt="Execution" className="w-full h-48 object-cover rounded-lg mb-4"/>
+                <h4 className="font-semibold text-white">3. Uitvoering</h4>
+                <p className="text-gray-400 text-sm">Opbouw en begeleiding</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <img src="/placeholder.svg" alt="Celebration" className="w-full h-48 object-cover rounded-lg mb-4"/>
+                <h4 className="font-semibold text-white">4. Evaluatie</h4>
+                <p className="text-gray-400 text-sm">Feest en feedback</p>
+              </div>
+            </div>
+          </div>
+
         {/* Support Features Grid */}
         <div className="mb-16">
           <h3 className="text-2xl font-heading font-bold text-center text-white mb-12">
@@ -159,6 +192,18 @@ const SportclubBenefits = () => {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* KNVB Partnership Section */}
+        <div className="text-center my-20">
+            <h3 className="text-2xl font-heading font-bold text-white mb-8">
+              Onze Partners
+            </h3>
+            <div className="flex justify-center items-center gap-8">
+              <img src="/placeholder.svg" alt="KNVB Logo" className="h-16"/>
+              <img src="/placeholder.svg" alt="Partner Logo 2" className="h-16"/>
+              <img src="/placeholder.svg" alt="Partner Logo 3" className="h-16"/>
+            </div>
         </div>
 
         {/* Package Benefits */}
@@ -211,34 +256,6 @@ const SportclubBenefits = () => {
             </WeButton>
           </div>
         </div>
-
-        {/* Photo Placement Suggestions - Hidden comments for future implementation */}
-        {/* 
-        PHOTO PLACEMENT SUGGESTIONS:
-        
-        1. Hero Background: Wide shot of football club during event with orange WePlay banners
-           - Size: Full section background with dark overlay
-           - Content: Crowded club event with happy families and players
-           
-        2. Benefit Icons: Custom illustrated icons in orange/white theme
-           - LED Football field glowing at night
-           - Happy volunteers with clipboards  
-           - Club sponsors logos and handshake
-           - Size: 64x64px vector illustrations
-           
-        3. Process Flow: Step-by-step visual guide
-           - Phone call consultation photo
-           - Event planning meeting 
-           - Equipment setup action shot
-           - Happy celebration moment
-           - Size: 300x200px each in timeline format
-           
-        4. KNVB Partnership: Official certification and partnership badges
-           - KNVB logo with "Official Supplier" badge
-           - Quality certifications
-           - Insurance/safety compliance badges
-           - Size: 120x80px official badges
-        */}
       </Container>
     </section>
   );

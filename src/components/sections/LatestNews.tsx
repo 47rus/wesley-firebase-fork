@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { WeCard, WeCardContent } from '@/components/ui/WeCard';
 import WeButton from '@/components/ui/WeButton';
 import WeBadge from '@/components/ui/WeBadge';
@@ -74,7 +74,7 @@ const LatestNews = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {newsItems.map((item) => (
             <WeCard key={item.id} className="group cursor-pointer overflow-hidden">
-              <Link to={`/nieuws/${item.slug}`} className="block">
+              <Link href={`/nieuws/${item.slug}`} className="block">
                 <div className="relative">
                 <img 
                   src={item.image} 
@@ -130,7 +130,7 @@ const LatestNews = () => {
           </div>
 
           {/* Main CTA */}
-          <Link to="/nieuws">
+          <Link href="/nieuws">
             <WeButton 
               variant="primary" 
               size="lg"

@@ -1,7 +1,8 @@
+
 // Supabase Edge Function: Sitemap generator with CORS
 // Returns dynamic XML sitemap based on rows in public.seo
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createClient } from '@supabase/supabase-js';
 
 // CORS headers
 const corsHeaders: Record<string, string> = {
