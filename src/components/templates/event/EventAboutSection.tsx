@@ -87,13 +87,10 @@ const EventAboutSection: React.FC<EventAboutSectionProps> = ({
             <div className="absolute -inset-6 bg-gradient-to-r from-weplay-primary/20 to-weplay-accent/20 rounded-3xl blur-2xl opacity-60"></div>
             
             {wat_is_image ? (
-              <div className="relative bg-gradient-to-br from-weplay-primary/10 to-weplay-accent/10 rounded-3xl aspect-square flex items-center justify-center hover:scale-105 transition-transform duration-300 border-2 border-white/50 backdrop-blur-sm shadow-2xl">
-                <div className="text-center space-y-6">
-                  <div className="text-8xl animate-[float_4s_ease-in-out_infinite] filter drop-shadow-lg">{event_emoji}</div>
-                  <div className="bg-white/95 backdrop-blur-sm p-6 rounded-3xl shadow-xl border border-weplay-primary/20">
-                    <span className="text-weplay-text font-bold text-lg">Afbeelding: {wat_is_image}</span>
-                  </div>
-                </div>
+              <div 
+                className="relative bg-white rounded-3xl aspect-square bg-cover bg-center hover:scale-105 transition-transform duration-300 border-2 border-white/50 shadow-2xl"
+                style={{ backgroundImage: `url(https://weplay-assets.s3.eu-north-1.amazonaws.com/images/${wat_is_image})` }}
+              >
               </div>
             ) : (
               <div className="relative bg-gradient-to-br from-weplay-primary/15 to-weplay-accent/15 rounded-3xl aspect-square flex items-center justify-center hover:scale-105 transition-transform duration-300 border-2 border-white/50 backdrop-blur-sm overflow-hidden shadow-2xl">

@@ -1,29 +1,26 @@
 
 import React from 'react';
 import { notFound } from 'next/navigation';
-import EventTemplate from '@/components/templates/EventTemplate';
-import { supabase } from '@/integrations/supabase/client'; // Using client for now, should be a server client
-import { Package } from '@/components/templates/EventPackages';
-import { Tables } from '@/integrations/supabase/types';
+import EventTemplate, { EventTemplateProps } from '@/components/templates/EventTemplate';
+import { db } from '@/integrations/firebase/server';
 import { Metadata } from 'next';
-
-type EventSeoData = Tables<"seo">;
+import { DocumentData } from 'firebase-admin/firestore';
+import { Package } from '@/components/templates/event/EventPackages';
 
 // Generate metadata for the page
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const { slug } = params;
-  const { data: eventSeo } = await supabase
-    .from('seo')
-    .select('seo_title, seo_description')
-    .eq('url_slug', slug)
-    .single();
+  const docRef = db.collection('seo').doc(slug);
+  const docSnap = await docRef.get();
 
-  if (!eventSeo) {
+  if (!docSnap.exists) {
     return {
       title: 'Event Not Found',
       description: 'This event does not exist.',
     };
   }
+
+  const eventSeo = docSnap.data();
 
   return {
     title: eventSeo.seo_title,
@@ -33,51 +30,40 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 // Generate static paths for events that exist
 export async function generateStaticParams() {
-    const { data: events } = await supabase.from('seo').select('url_slug');
-    return events?.map((event) => ({
-      slug: event.url_slug,
-    })) || [];
+  const querySnapshot = await db.collection('seo').get();
+  return querySnapshot.docs.map((doc) => ({
+    slug: doc.id,
+  }));
 }
 
 const DynamicEventPage = async ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
 
   // Fetch SEO data
-  const { data: eventSeo, error: seoError } = await supabase
-    .from('seo')
-    .select('*')
-    .eq('url_slug', slug)
-    .single();
+  const docRef = db.collection('seo').doc(slug);
+  const docSnap = await docRef.get();
 
-  if (seoError || !eventSeo) {
+  if (!docSnap.exists) {
     notFound();
   }
+
+  const eventSeo = docSnap.data() as DocumentData;
 
   // Fetch packages
-  const { data: packages, error: packagesError } = await supabase
-    .from('events')
-    .select('*')
-    .eq('landing_page', eventSeo.landing_page)
-    .gt('package_price', 0)
-    .order('package_price', { ascending: true });
-
-  if (packagesError) {
-    // Or handle this error more gracefully
-    notFound();
-  }
-
-  const parsedSeo = {
-    ...eventSeo,
-    rating_sportclubs: eventSeo.rating_sportclubs ? parseInt(eventSeo.rating_sportclubs, 10) : undefined,
-    rating_scholen: eventSeo.rating_scholen ? parseInt(eventSeo.rating_scholen, 10) : undefined,
-    rating_non_profit: eventSeo.rating_non_profit ? parseInt(eventSeo.rating_non_profit, 10) : undefined,
-    rating_bedrijven: eventSeo.rating_bedrijven ? parseInt(eventSeo.rating_bedrijven, 10) : undefined,
-  };
-
+  const packagesQuery = db.collection('events')
+    .where('landing_page', '==', eventSeo.landing_page)
+    .where('package_price', '>', 0)
+    .orderBy('package_price', 'asc');
+    
+  const packagesSnapshot = await packagesQuery.get();
+  const packages = packagesSnapshot.docs.map((doc: DocumentData) => {
+    return doc.data() as Package;
+  });
+  
   return (
-    <EventTemplate 
-      {...parsedSeo}
-      packages={packages || []}
+    <EventTemplate
+      {...eventSeo as EventTemplateProps}
+      packages={packages}
     />
   );
 };

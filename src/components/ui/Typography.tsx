@@ -3,7 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
-  variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'subtitle' | 'body' | 'caption' | 'hero';
+  variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'subtitle' | 'body' | 'caption' | 'hero';
   weight?: 'normal' | 'medium' | 'bold' | 'black' | 'extra-black';
   color?: 'primary' | 'secondary' | 'accent' | 'white' | 'muted';
   as?: keyof JSX.IntrinsicElements;
@@ -18,6 +18,8 @@ const Typography = React.forwardRef<HTMLElement, TypographyProps>(
       h2: "text-2xl lg:text-3xl font-heading font-bold uppercase tracking-wide",
       h3: "text-xl lg:text-2xl font-heading font-bold tracking-wide",
       h4: "text-lg lg:text-xl font-heading font-bold",
+      h5: "text-base lg:text-lg font-heading font-bold",
+      h6: "text-sm lg:text-base font-heading font-bold",
       subtitle: "text-lg lg:text-xl font-sans font-medium",
       body: "text-base lg:text-lg font-sans",
       caption: "text-sm font-sans"
@@ -46,7 +48,9 @@ const Typography = React.forwardRef<HTMLElement, TypographyProps>(
         case 'h2': return 'h2';
         case 'h3': return 'h3';
         case 'h4': return 'h4';
-        case 'subtitle': return 'h5';
+        case 'h5': return 'h5';
+        case 'h6': return 'h6';
+        case 'subtitle': return 'p'; // Changed from h5 to avoid conflicts
         default: return 'p';
       }
     };

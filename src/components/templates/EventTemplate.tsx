@@ -1,15 +1,7 @@
 'use client';
-import React, { useState } from 'react';
-import { CheckCircle, Phone, ArrowRight, Settings, Trophy, Building2, GraduationCap, Heart } from 'lucide-react';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import React from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import Container from '@/components/layout/Container';
-import { WeCard, WeCardContent } from '@/components/ui/WeCard';
-import WeButton from '@/components/ui/WeButton';
-import WeSelect from '@/components/ui/WeSelect';
-import UnifiedCard from '@/components/ui/UnifiedCard';
-import Typography from '@/components/ui/Typography';
 import EventHero from './event/EventHero';
 import EventPackages, { Package } from './event/EventPackages';
 import EventInspirationalContent from './event/EventInspirationalContent';
@@ -20,10 +12,8 @@ import EventSeoContent from './event/EventSeoContent';
 import EventFaq from './event/EventFaq';
 import EventRelatedEvents from './event/EventRelatedEvents';
 import EventFinalCta from './event/EventFinalCta';
-import { brandPromises } from '@/data/brandPromises';
-import { scrollToBookingForm } from '@/utils/scrollUtils';
 
-interface EventTemplateProps {
+export interface EventTemplateProps {
   // SEO fields
   url_slug: string;
   seo_title: string;
@@ -117,32 +107,6 @@ interface EventTemplateProps {
 }
 
 const EventTemplate: React.FC<EventTemplateProps> = (props) => {
-  const [formSubmitted, setFormSubmitted] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    const data: Record<string, any> = {};
-    formData.forEach((value, key) => {
-      data[key] = value;
-    });
-    data.event = props.url_slug;
-
-    try {
-      const res = await fetch('https://hook.eu1.make.com/iwdsbm75pnvw7rnmwmbdu4uj72w5522j', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (res.ok) {
-        setFormSubmitted(true);
-        form.reset();
-      }
-    } catch (error) {
-      // Optional: handle error silently for now
-    }
-  };
 
   const getFAQs = () => {
     const faqs = [];

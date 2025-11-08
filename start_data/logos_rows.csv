@@ -1,0 +1,3 @@
+id,name,description,file_path,logo_type,background_type,is_primary,url
+1,WePlay Light,WePlay Logo for light backgrounds,/logos/weplay-light.svg,full,light,true,/placeholder.svg
+2,WePlay Dark,WePlay Logo for dark backgrounds,/logos/weplay-dark.svg,full,dark,false,/placeholder.svg

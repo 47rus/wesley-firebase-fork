@@ -47,11 +47,12 @@ const EventSeoContent: React.FC<EventSeoContentProps> = ({ content, event_emoji 
               </div>
               <div className={index % 2 === 1 ? 'lg:col-start-1' : ''}>
                 {item.image ? (
-                  <div className="bg-gradient-to-br from-weplay-primary/10 to-weplay-accent/10 rounded-3xl aspect-video flex items-center justify-center hover:scale-105 transition-transform duration-300 border-2 border-white/50 shadow-xl">
-                    <div className="text-center">
-                      <div className="text-6xl mb-4">{event_emoji}</div>
-                      <span className="text-weplay-text-medium font-bold">Afbeelding: {item.image}</span>
-                    </div>
+                  <div className="bg-gradient-to-br from-weplay-primary/10 to-weplay-accent/10 rounded-3xl aspect-video flex items-center justify-center hover:scale-105 transition-transform duration-300 border-2 border-white/50 shadow-xl overflow-hidden">
+                    <img
+                      src={`https://weplay-assets.s3.eu-north-1.amazonaws.com/images/${item.image}`}
+                      alt={item.title}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 ) : (
                   <div className="bg-gradient-to-br from-weplay-primary/10 to-weplay-dark/10 rounded-3xl aspect-video flex items-center justify-center hover:scale-105 transition-transform duration-300 border-2 border-white/50 shadow-xl">

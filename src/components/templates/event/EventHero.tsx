@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import { Play, Users, Clock, Star, Phone, ChevronDown, ArrowRight } from 'lucide-react';
 import Typography from '@/components/ui/Typography';
@@ -51,6 +52,9 @@ const EventHero: React.FC<EventHeroProps> = ({
 
   // Extract first 2 sentences for cleaner hero
   const getShortDescription = () => {
+    if (!hero_description) {
+      return ''; // Return an empty string if hero_description is not available
+    }
     const sentences = hero_description.split('. ');
     return sentences.slice(0, 2).join('. ') + (sentences.length > 2 ? '.' : '');
   };

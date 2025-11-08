@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '@/integrations/firebase/client';
 import { Menu, X, Phone, Settings, ChevronLeft, ChevronRight, Trophy, GraduationCap, Building2, Heart, Newspaper } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -8,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import WeButton from '@/components/ui/WeButton';
 import Container from '@/components/layout/Container';
 import { useLogos, AppLogo } from '@/hooks/use-logos';
-import { supabase } from '@/integrations/supabase/client';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,25 +26,22 @@ const Header = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      const { data, error } = await supabase
-        .from('seo')
-        .select('id, url_slug, landing_page, event_emoji')
-        .order('sort_order', { ascending: true });
-
-      if (error) {
+      try {
+        const q = query(collection(db, 'seo'), orderBy('sort_order', 'asc'));
+        const querySnapshot = await getDocs(q);
+        const eventsData = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            name: data.landing_page,
+            href: `/event/${data.url_slug}`,
+            icon: data.event_emoji,
+            color: 'text-gray-600'
+          };
+        });
+        setEvents(eventsData);
+      } catch (error) {
         console.error('Error fetching events for header:', error);
-        return;
-      }
-
-      if (data) {
-        const formattedEvents = data.map(item => ({
-          id: item.id,
-          name: item.landing_page,
-          href: `/event/${item.url_slug}`,
-          icon: item.event_emoji,
-          color: 'text-gray-600'
-        }));
-        setEvents(formattedEvents);
       }
     };
 

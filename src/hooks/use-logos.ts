@@ -1,6 +1,7 @@
 
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/integrations/firebase/client';
 
 // Define the shape of the logo data
 export interface AppLogo {
@@ -21,25 +22,9 @@ export const useLogos = () => {
   return useQuery<AppLogo[], Error>({
     queryKey: ['logos'],
     queryFn: async (): Promise<AppLogo[]> => {
-      const { data, error } = await supabase
-        .from('logos')
-        .select('*');
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      if (!data) {
-          return [];
-      }
-
-      // Transform file paths into full URLs
-      const transformedData: AppLogo[] = data.map((logo: any) => ({
-        ...logo,
-        url: '/placeholder.svg',
-      }));
-
-      return transformedData;
+      const querySnapshot = await getDocs(collection(db, 'logos'));
+      const logosData = querySnapshot.docs.map(doc => doc.data() as AppLogo);
+      return logosData;
     },
     // Cache the data for 1 hour to avoid flickering
     staleTime: 1000 * 60 * 60,

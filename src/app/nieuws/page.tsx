@@ -5,6 +5,8 @@ import Container from '@/components/layout/Container';
 import { WeCard, WeCardContent } from '@/components/ui/WeCard';
 import WeButton from '@/components/ui/WeButton';
 import WeBadge from '@/components/ui/WeBadge';
+import { db } from '@/integrations/firebase/server';
+import { DocumentData } from 'firebase-admin/firestore';
 
 export const metadata = {
   title: 'Nieuws | WePlay United - Laatste ontwikkelingen en updates',
@@ -13,90 +15,40 @@ export const metadata = {
   alternates: { canonical: '/nieuws' },
 };
 
-const NieuwsPage = () => {
-  // Extended news data - in the future this will come from Supabase
-  const newsItems = [
-    {
-      id: 1,
-      title: "WePlay United wordt Official Supplier KNVB",
-      excerpt: "Sinds 2023 zijn wij officieel erkend door de KNVB als betrouwbare leverancier voor game-events bij voetbalclubs door heel Nederland.",
-      date: "15 maart 2024",
-      image: "/placeholder.svg?height=300&width=400",
-      badge: "NIEUW",
-      badgeVariant: "primary" as const,
-      slug: "weplay-official-supplier-knvb"
-    },
-    {
-      id: 2,
-      title: "Nieuwe VR experiences uitgebreid",
-      excerpt: "We hebben ons VR aanbod uitgebreid met educatieve experiences voor scholen en trainingsimulaties voor bedrijven. Ontdek de mogelijkheden.",
-      date: "8 maart 2024",
-      image: "/placeholder.svg?height=300&width=400",
-      badge: "Product Update",
-      badgeVariant: "default" as const,
-      slug: "nieuwe-vr-experiences"
-    },
-    {
-      id: 3,
-      title: "Record aantal events in februari 2024",
-      excerpt: "Met 150 events in één maand hebben we een nieuw record gevestigd. Bedankt voor het vertrouwen van alle scholen, sportclubs en bedrijven.",
-      date: "1 maart 2024",
-      image: "/placeholder.svg?height=300&width=400",
-      badge: "Milestone",
-      badgeVariant: "success" as const,
-      slug: "record-aantal-events-februari"
-    },
-    {
-      id: 4,
-      title: "Uitbreiding Duitsland aangekondigd",
-      excerpt: "WePlay United breidt uit naar Duitsland. Vanaf april organiseren we ook events in de grote Duitse steden voor lokale sportclubs.",
-      date: "25 februari 2024",
-      image: "/placeholder.svg?height=300&width=400",
-      badge: "Expansion",
-      badgeVariant: "warning" as const,
-      slug: "uitbreiding-duitsland"
-    },
-    {
-      id: 5,
-      title: "Partnership met Nederlandse scholen",
-      excerpt: "We kondigen een partnership aan met 50+ Nederlandse scholen voor educatieve gaming events die leren en plezier combineren.",
-      date: "20 februari 2024",
-      image: "/placeholder.svg?height=300&width=400",
-      badge: "Partnership",
-      badgeVariant: "default" as const,
-      slug: "partnership-nederlandse-scholen"
-    },
-    {
-      id: 6,
-      title: "Nieuwe LED Voetbal arena gelanceerd",
-      excerpt: "Onze nieuwe LED Voetbal arena biedt een unieke ervaring met lichteffecten en interactieve elementen voor spectaculaire voetbalwedstrijden.",
-      date: "15 februari 2024",
-      image: "/placeholder.svg?height=300&width=400",
-      badge: "Product",
-      badgeVariant: "primary" as const,
-      slug: "nieuwe-led-voetbal-arena"
-    },
-    {
-      id: 7,
-      title: "WePlay wint Innovatie Award 2024",
-      excerpt: "We zijn trots om te verkondigen dat WePlay United de Innovatie Award 2024 heeft gewonnen voor onze bijdrage aan moderne evenementen.",
-      date: "10 februari 2024",
-      image: "/placeholder.svg?height=300&width=400",
-      badge: "Award",
-      badgeVariant: "success" as const,
-      slug: "weplay-wint-innovatie-award"
-    },
-    {
-      id: 8,
-      title: "Nieuwe F1 Simulator voor bedrijfsevents",
-      excerpt: "Onze state-of-the-art F1 simulator is nu beschikbaar voor bedrijfsevents en team building activiteiten met realistische race-ervaring.",
-      date: "5 februari 2024",
-      image: "/placeholder.svg?height=300&width=400",
-      badge: "Product",
-      badgeVariant: "primary" as const,
-      slug: "nieuwe-f1-simulator-bedrijfsevents"
-    }
-  ];
+// Define a type for the news item for better type safety
+type NewsItem = {
+  id: string;
+  slug: string;
+  image: string;
+  badgeVariant: "default" | "primary" | "success" | "warning";
+  badge: string;
+  date: string;
+  title: string;
+  excerpt: string;
+};
+
+const NieuwsPage = async () => {
+  // Fetch news data from Firestore
+  const newsSnapshot = await db.collection('news').orderBy('date', 'desc').get();
+  
+  const newsItems: NewsItem[] = newsSnapshot.docs.map((doc: DocumentData) => {
+    const data = doc.data();
+    // Convert Firestore Timestamp to a readable date string if necessary
+    const date = data.date instanceof Date 
+      ? data.date.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })
+      : (data.date?.toDate?.()?.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' }) || 'No date');
+
+    return {
+      id: doc.id,
+      slug: data.slug || doc.id,
+      image: data.image || '/placeholder.svg?height=300&width=400',
+      badgeVariant: data.badgeVariant || 'default',
+      badge: data.badge || 'Nieuws',
+      date: date,
+      title: data.title || 'Untitled Article',
+      excerpt: data.excerpt || 'No excerpt available.',
+    };
+  });
 
   return (
     <main>
