@@ -12,6 +12,7 @@ export interface AppLogo {
   logo_type: 'icon' | 'horizontal' | 'vertical' | 'full';
   background_type: 'transparent' | 'light' | 'dark';
   is_primary: boolean;
+  is_favicon: boolean;
   created_at: string;
   updated_at: string;
   url: string;
@@ -23,10 +24,11 @@ export const useLogos = () => {
     queryKey: ['logos'],
     queryFn: async (): Promise<AppLogo[]> => {
       const querySnapshot = await getDocs(collection(db, 'logos'));
-      const logosData = querySnapshot.docs.map(doc => doc.data() as AppLogo);
+      // Make sure to map the document ID to the object
+      const logosData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }) as AppLogo);
       return logosData;
     },
-    // Cache the data for 1 hour to avoid flickering
-    staleTime: 1000 * 60 * 60,
+    // Re-enable caching for performance
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 };

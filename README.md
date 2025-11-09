@@ -12,7 +12,7 @@ This project is built with a powerful and scalable set of technologies:
 *   **Language:** [TypeScript](https://www.typescriptlang.org/)
 *   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 *   **UI Components:** [Shadcn/UI](https://ui.shadcn.com/)
-*   **Backend & Database:** [Supabase](https://supabase.com/)
+*   **Backend & Database:** [Firebase](https://firebase.google.com/) (Firestore)
 *   **Deployment:** [Firebase App Hosting](https://firebase.google.com/docs/app-hosting)
 
 ## Getting Started
@@ -27,8 +27,8 @@ You will need to have [Node.js](https://nodejs.org/) (version 18 or higher) and 
 
 1.  **Clone the repository:**
     ```sh
-    git clone https://github.com/your_username_/Project-Name.git
-    cd Project-Name
+    git clone https://github.com/47rus/wesley-firebase-fork.git
+    cd wesley-firebase-fork
     ```
 
 2.  **Install dependencies:**
@@ -38,11 +38,13 @@ You will need to have [Node.js](https://nodejs.org/) (version 18 or higher) and 
     ```
 
 3.  **Set up environment variables:**
-    You will need to connect to a Supabase project. Create a file named `.env.local` in the root of the project and add your Supabase project URL and anon key:
+    You will need to connect to a Firebase project. Create a file named `.env.local` in the root of the project by copying the example file:
+    ```sh
+    cp .env.example .env.local
     ```
-    NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
-    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-    ```
+    Now, open `.env.local` and add your Firebase project credentials.
+    *   You can find your **client-side** (`NEXT_PUBLIC_...`) credentials in the Firebase Console settings.
+    *   You can find your **server-side** (`FIREBASE_...`) credentials in your `serviceAccountKey.json` file.
 
 ### Running the Development Server
 
@@ -60,6 +62,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the a
 *   `npm run build`: Creates a production-ready build of the application.
 *   `npm run start`: Starts the production server (requires `npm run build` to be run first).
 *   `npm run lint`: Lints the code to catch errors and enforce code style.
+*   `npm run sitemap`: Generates the `sitemap.xml` file in the `public/` directory based on the content in your Firestore database.
 
 ## Deployment to Firebase App Hosting (with SSR)
 

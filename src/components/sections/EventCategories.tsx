@@ -1,22 +1,24 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { supabase } from '@/integrations/supabase/client';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { db } from '@/integrations/firebase/client';
 import Container from '@/components/layout/Container';
 import { ArrowRight } from 'lucide-react';
 import WeButton from '@/components/ui/WeButton';
 
 async function getEventCategories() {
-  const { data, error } = await supabase
-    .from('seo')
-    .select('url_slug, hero_title, event_emoji')
-    .order('id', { ascending: true });
-
-  if (error) {
-    console.error('Error fetching event categories:', error);
-    return [];
-  }
-  return data;
+  const q = query(collection(db, 'seo'), orderBy('sort_order', 'asc'));
+  const querySnapshot = await getDocs(q);
+  const eventsData = querySnapshot.docs.map(doc => {
+    const data = doc.data();
+    return {
+      url_slug: data.url_slug,
+      hero_title: data.hero_title,
+      event_emoji: data.event_emoji,
+    };
+  });
+  return eventsData;
 }
 
 const EventCategories = async () => {

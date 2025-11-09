@@ -1,27 +1,40 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Phone, Mail, Clock, Building2, Hash, CreditCard, Banknote } from 'lucide-react';
 import Container from '@/components/layout/Container';
 import WeBadge from '@/components/ui/WeBadge';
 import { useLogos, AppLogo } from '@/hooks/use-logos';
+import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { db } from '@/integrations/firebase/client';
 
 const Footer = () => {
   const { data: logos, isLoading, isError } = useLogos();
+  const [events, setEvents] = useState<any[]>([]);
 
-  const darkLogo = logos?.find((logo: AppLogo) => logo.background_type === 'dark' && logo.is_primary);
+  const darkLogo = logos?.find((logo: AppLogo) => logo.background_type === 'dark');
 
-  const events = [
-    { id: '1', name: 'FIFA Toernooi', href: '/event/fifa-toernooi' },
-    { id: '2', name: 'PS5 Huren', href: '/event/ps5-huren' },
-    { id: '3', name: 'F1 Race Simulatoren', href: '/event/f1-race-simulatoren' },
-    { id: '4', name: 'LED Voetbal', href: '/event/led-voetbal' },
-    { id: '5', name: 'Bubbel Voetbal', href: '/event/bubbel-voetbal' },
-    { id: '6', name: 'VR Experience', href: '/event/vr-experience' },
-    { id: '7', name: 'Retro Arcade Hal', href: '/event/retro-arcade-hal' },
-    { id: '8', name: 'Graffiti Workshop', href: '/event/graffiti-workshop' },
-    { id: '9', name: 'Silent Disco', href: '/event/silent-disco' },
-  ];
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const q = query(collection(db, 'seo'), orderBy('sort_order', 'asc'), limit(9));
+        const querySnapshot = await getDocs(q);
+        const eventsData = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            name: data.landing_page,
+            href: `/event/${data.url_slug}`,
+          };
+        });
+        setEvents(eventsData);
+      } catch (error) {
+        console.error('Error fetching events for footer:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   return (
     <footer className="bg-gray-900 text-white">

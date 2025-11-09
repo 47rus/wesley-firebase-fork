@@ -20,7 +20,7 @@ const Header = () => {
   const isNavigatingRef = useRef(false);
 
   const { data: logos, isLoading, isError } = useLogos();
-  const lightLogo = logos?.find((logo: AppLogo) => logo.background_type === 'light' && logo.is_primary);
+  const lightLogo = logos?.find((logo: AppLogo) => logo.background_type === 'light');
   
   const [events, setEvents] = useState<any[]>([]);
 

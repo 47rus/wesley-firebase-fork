@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://kusdonigieemrsboshaj.supabase.co/functions/v1/sitemap
+Sitemap: [YOUR_DOMAIN]/sitemap.xml

@@ -2,7 +2,7 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import Container from '@/components/layout/Container';
-import { db } from '@/integrations/firebase/server'; // Use the server client
+import { db } from '@/integrations/firebase/client'; // Use the server client
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { Metadata } from 'next';
 
