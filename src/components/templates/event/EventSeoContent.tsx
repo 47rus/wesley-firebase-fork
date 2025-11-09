@@ -3,6 +3,7 @@ import Container from '@/components/layout/Container';
 import WeButton from '@/components/ui/WeButton';
 import { ArrowRight } from 'lucide-react';
 import { scrollToBookingForm } from '@/utils/scrollUtils';
+import Image from 'next/image';
 
 interface SeoContentItem {
   title: string;
@@ -47,11 +48,13 @@ const EventSeoContent: React.FC<EventSeoContentProps> = ({ content, event_emoji 
               </div>
               <div className={index % 2 === 1 ? 'lg:col-start-1' : ''}>
                 {item.image ? (
-                  <div className="bg-gradient-to-br from-weplay-primary/10 to-weplay-accent/10 rounded-3xl aspect-video flex items-center justify-center hover:scale-105 transition-transform duration-300 border-2 border-white/50 shadow-xl overflow-hidden">
-                    <img
-                      src={`https://weplay-assets.s3.eu-north-1.amazonaws.com/images/${item.image}`}
+                  <div className="relative bg-gradient-to-br from-weplay-primary/10 to-weplay-accent/10 rounded-3xl aspect-video flex items-center justify-center hover:scale-105 transition-transform duration-300 border-2 border-white/50 shadow-xl overflow-hidden">
+                    <Image
+                      src={item.image}
                       alt={item.title}
-                      className="w-full h-full object-cover"
+                      layout="fill"
+                      objectFit="cover"
+                      className="w-full h-full"
                     />
                   </div>
                 ) : (

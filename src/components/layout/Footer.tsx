@@ -9,7 +9,7 @@ import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '@/integrations/firebase/client';
 
 const Footer = () => {
-  const { data: logos, isLoading, isError } = useLogos();
+  const logos = useLogos();
   const [events, setEvents] = useState<any[]>([]);
 
   const darkLogo = logos?.find((logo: AppLogo) => logo.background_type === 'dark');

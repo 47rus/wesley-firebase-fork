@@ -1,33 +1,58 @@
+"use client";
 
-import React from 'react';
-import Container from '@/components/layout/Container';
-import UnifiedCard from '@/components/ui/UnifiedCard';
-import { LogoList } from './LogoList';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { useClients } from "@/hooks/use-clients";
+import Autoplay from "embla-carousel-autoplay";
+import Image from "next/image";
 
-const ClientsSection = () => {
+export default function ClientsSection() {
+  const clients = useClients();
+
   return (
-    <section className="py-16 bg-white">
-      <Container>
-        <div className="text-center">
-          {/* Bridge text */}
-          <div className="mb-12">
-            <p className="text-lg text-weplay-text-medium mb-4">
-              Van sportclubs tot non-profits en van scholen tot bedrijven
-            </p>
-            <h2 className="text-4xl lg:text-5xl font-heading font-black text-weplay-text mb-6 leading-tight uppercase">
-              VERTROUWD DOOR <span className="text-weplay-primary">500+</span> ORGANISATIES
-            </h2>
-          </div>
-          
-          {/* Client logos in unified card */}
-          <UnifiedCard variant="default" className="max-w-5xl mx-auto">
-            <LogoList />
-          </UnifiedCard>
-
-        </div>
-      </Container>
-    </section>
+    <div className="container mx-auto px-4 md:px-6">
+      <div className="mb-8 text-center">
+        <p className="text-lg font-medium text-gray-600">
+          Trusted by 500+ organizations
+        </p>
+      </div>
+      <Carousel
+        className="w-full"
+        plugins={[
+          Autoplay({
+            delay: 2000,
+            stopOnInteraction: false,
+          }),
+        ]}
+        opts={{
+          align: "start",
+          loop: true,
+        }}
+      >
+        <CarouselContent>
+          {clients.map((client) => (
+            <CarouselItem key={client.id} className="md:basis-1/3 lg:basis-1/6">
+              <div className="p-4">
+                <Image
+                  // Use the new, reliable URL field directly from Firestore
+                  src={client.url}
+                  alt={client.altText}
+                  width={150}
+                  height={150}
+                  className="mx-auto"
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+    </div>
   );
-};
-
-export default ClientsSection;
+}

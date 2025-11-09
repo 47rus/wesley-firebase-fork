@@ -1,8 +1,7 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // SEO and Events data should be public for search engines and users
-    match /seo/{docId} {
+    match /clients/{docId} {
       allow read: if true;
       allow write: if request.auth != null;
     }
@@ -10,17 +9,20 @@ service cloud.firestore {
       allow read: if true;
       allow write: if request.auth != null;
     }
-    match /news/{docId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
     match /logos/{docId} {
       allow read: if true;
       allow write: if request.auth != null;
     }
-    // Default deny for all other collections
+    match /news/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    match /seo/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
     match /{document=**} {
-      allow read, write: if request.auth != null;
+      allow read, write: if false;
     }
   }
 }

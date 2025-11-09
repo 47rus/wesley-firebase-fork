@@ -1,0 +1,33 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "logos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "background_type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "order",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "events",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "landing_page",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "package_price",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
