@@ -1,0 +1,42 @@
+steps:
+# Step 1: Access the Firebase config from Secret Manager and write it to a file
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - 'gcloud secrets versions access latest --secret=firebase-config > /workspace/firebase-config.json'
+
+# Step 2: Build the container image, passing the config from the file
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      docker build \
+        -t europe-west4-docker.pkg.dev/wesley-firebase-fork-120-56e79/firebaseapphosting-images/we-play-ssr:latest \
+        --build-arg FIREBASE_CONFIG="$$(cat /workspace/firebase-config.json)" \
+        .
+
+# Step 3: Push the container image to Artifact Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'europe-west4-docker.pkg.dev/wesley-firebase-fork-120-56e79/firebaseapphosting-images/we-play-ssr:latest']
+
+# Step 4: Deploy to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: [
+    'run',
+    'deploy',
+    'we-play-ssr',
+    '--image',
+    'europe-west4-docker.pkg.dev/wesley-firebase-fork-120-56e79/firebaseapphosting-images/we-play-ssr:latest',
+    '--region',
+    'europe-west4',
+    '--platform',
+    'managed',
+    '--quiet'
+  ]
+
+# Specify the final image that was built
+images:
+- 'europe-west4-docker.pkg.dev/wesley-firebase-fork-120-56e79/firebaseapphosting-images/we-play-ssr:latest'
